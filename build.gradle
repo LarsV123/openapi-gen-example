@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.23"
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation( libs.swagger.annotations )
+    implementation( libs.swagger.core )
+    implementation( libs.jackson.annotations )
+    implementation( libs.jackson.core )
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+resolve {
+    outputFileName = 'ExampleAPI'
+    outputFormat = 'YAML'
+    prettyPrint = 'TRUE'
+    classpath = sourceSets.main.runtimeClasspath
+    resourcePackages = ["org.example"]
+    outputDir = file('example-api')
+}

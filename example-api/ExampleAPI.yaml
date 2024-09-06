@@ -1,0 +1,74 @@
+openapi: 3.0.1
+info:
+  title: Hello World API
+  version: "1.0"
+paths:
+  /hello/{message}:
+    get:
+      summary: Get a publication
+      description: Returns a publication with a list of Funds of possibly different
+        types
+      operationId: getPublication
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/publication'
+components:
+  schemas:
+    ConfirmedFunds:
+      required:
+      - type
+      type: object
+      discriminator:
+        propertyName: type
+      allOf:
+      - $ref: '#/components/schemas/Funds'
+      - type: object
+        properties:
+          confirmedField:
+            type: string
+          type:
+            type: string
+    Funds:
+      required:
+      - type
+      type: object
+      properties:
+        sharedField:
+          type: string
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/UnconfirmedFunds'
+      - $ref: '#/components/schemas/ConfirmedFunds'
+    UnconfirmedFunds:
+      required:
+      - type
+      type: object
+      discriminator:
+        propertyName: type
+      allOf:
+      - $ref: '#/components/schemas/Funds'
+      - type: object
+        properties:
+          unconfirmedField:
+            type: string
+          type:
+            type: string
+    publication:
+      type: object
+      properties:
+        funds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Funds'
